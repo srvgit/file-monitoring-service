@@ -1,5 +1,6 @@
 {
-    "sourceDir":"/tmp",
-    "reportDir":"/tmp/out",
-    "maxGoroutines": 2
-}
+    "sourceDirectory": "/Users/srujanv/go/src/file-monitoring-service/monitor_this",
+    "ReportDirectory": "./reports",
+    "maxGoRoutines": 10
+  }
+  
