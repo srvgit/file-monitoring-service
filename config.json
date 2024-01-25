@@ -1,0 +1,5 @@
+{
+    "sourceDir":"/tmp",
+    "reportDir":"/tmp/out",
+    "maxGoroutines": 2
+}
