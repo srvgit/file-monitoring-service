@@ -13,6 +13,13 @@
         
     }
 
+    {
+        {
+        "key:"filename,
+         size:int
+        }
+    }
+
     new file, update file
     determine the state - system time , updated ts vs created ts  maintain previous run time , 
     determine previously created value either overwrite or update 
@@ -37,6 +44,24 @@
 Additional features to be implemented:
 1. recursive 
 2. Error handling - error tracking 
+
+
+
+ref:
+https://go.dev/blog/pipelines
+
+
+
+TODO: 
+
+Format all loggers
+add test cases
+review delete use case ( right now making size to zero)
+review batch process and optimize if necessary
+Currently it supports base and subfolders monitoring
+
+
+
 
 
 

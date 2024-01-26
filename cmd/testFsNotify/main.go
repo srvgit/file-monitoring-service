@@ -26,7 +26,7 @@ func main() {
 				if event.Has(fsnotify.Write) {
 					log.Println("modified file:", event.Name)
 				}
-		    case err, ok := <-watcher.Errors:
+			case err, ok := <-watcher.Errors:
 				if !ok {
 					return
 				}
