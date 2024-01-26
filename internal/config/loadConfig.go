@@ -19,7 +19,7 @@ type ConfigProcessor interface {
 
 func LoadConfig(path string) (config *Config, err error) {
 	if path == "" {
-		path = "./config.json"
+		path = "../config.json"
 		log.Info("No config path provided, using default path: ", path)
 	}
 	file, err := os.Open(path)

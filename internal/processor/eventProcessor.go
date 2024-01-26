@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	log "github.com/sirupsen/logrus"
 )
 
 type Processor struct {
@@ -16,17 +17,15 @@ type Processor struct {
 }
 
 type EventProcessor interface {
-	UpdateStatus() error
-	ProcessEvent() error
 	NewProcessor() (*Processor, error)
 	ListenFolderEvents() error
+	CaptureEvents() error
 }
 
 func NewProcessor() (*Processor, error) {
 
 	path := os.Getenv("CONFIG_PATH")
-
-	fmt.Println("Loading config from ", path)
+	log.Info("Loading config from ", path)
 	config, err := config.LoadConfig(path)
 
 	processor := &Processor{
@@ -38,41 +37,31 @@ func NewProcessor() (*Processor, error) {
 	return processor, nil
 }
 
-func (p *Processor) ProcessEvents() error {
+func (p *Processor) ListenFolderEvents() error {
 
 	paths, err := io.GetSubDirectories(p.config.SrcDirectory)
 	paths = append(paths, p.config.SrcDirectory)
 	if err != nil {
 		fmt.Println(err)
 		return err
-
 	}
-
-	watch(paths)
+	p.watch(paths)
 	return nil
 }
 
-func (p *Processor) UpdateStatus() error {
-	//TODO: Implement
-	return nil
-}
-
-func watch(paths []string) {
+func (p *Processor)watch(paths []string) {
 	if len(paths) < 1 {
 		exit("must specify at least one path to watch")
 	}
-
-	// Create a new watcher.
 	w, err := fsnotify.NewWatcher()
+	events := make(chan fsnotify.Event)
+	go p.CaptureEvents(events)
 	if err != nil {
 		exit("creating a new watcher: %s", err)
 	}
 	defer w.Close()
+	go watchLoop(w, events)
 
-	// Start listening for events.
-	go watchLoop(w)
-
-	// Add all paths from the commandline.
 	for _, p := range paths {
 		err = w.Add(p)
 		if err != nil {
@@ -81,37 +70,55 @@ func watch(paths []string) {
 	}
 
 	printTime("ready; press ^C to exit")
-	<-make(chan struct{}) // Block forever
+	<-make(chan struct{})
 }
 
 func printTime(s string, args ...interface{}) {
 	fmt.Printf(time.Now().Format("15:04:05.0000")+" "+s+"\n", args...)
 }
 
-func watchLoop(w *fsnotify.Watcher) {
+func watchLoop(w *fsnotify.Watcher, events chan<- fsnotify.Event) {
 	i := 0
 	for {
 		select {
-		// Read from Errors.
 		case err, ok := <-w.Errors:
-			if !ok { // Channel was closed (i.e. Watcher.Close() was called).
+			if !ok {
 				return
 			}
 			printTime("ERROR: %s", err)
-		// Read from Events.
-		case e, ok := <-w.Events:
-			if !ok { // Channel was closed (i.e. Watcher.Close() was called).
+
+		case event, ok := <-w.Events:
+			if !ok {
 				return
 			}
-
-			// Just print the event nicely aligned, and keep track how many
-			// events we've seen.
 			i++
-			printTime("%3d %s", i, e)
+
+			events <- event
+
 		}
 	}
 }
 
 func exit(format string, a ...interface{}) {
+	log.Errorf(format, a...)
 	os.Exit(1)
+}
+
+func (p *Processor) CaptureEvents(events <-chan fsnotify.Event) error {
+
+	workers := make(chan struct{}, p.config.MaxGoRoutines)
+
+	for {
+		select {
+		case event := <-events:
+			workers <- struct{}{}
+			go p.processEvent(event, workers)
+		}
+	}
+}
+
+func (p *Processor) processEvent(event fsnotify.Event, workers <-chan struct{}) {
+	defer func() { <-workers }()
+	log.Info("Processing event: ", event)
+	printTime(" %s", event)
 }
