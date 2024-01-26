@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"time"
 
@@ -24,9 +25,7 @@ type FileEvent struct {
 }
 type Processor struct {
 	config *config.Config
-}
-
-type OutPut struct {
+	mu     sync.Mutex
 }
 
 type EventProcessor interface {
@@ -142,6 +141,7 @@ func (p *Processor) aggregateForBatch() {
 	for {
 		select {
 		case data := <-writer:
+			p.mu.Lock()
 			if batch == nil {
 				batch = make(map[string]int64)
 			}
@@ -157,6 +157,7 @@ func (p *Processor) aggregateForBatch() {
 				filename := "output.json"
 				p.appendToJSONFile(batch, filename)
 			}
+			p.mu.Unlock()
 
 		}
 	}
