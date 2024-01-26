@@ -1,3 +1,21 @@
+
+ref:
+https://go.dev/blog/pipelines
+
+
+
+TODO: 
+
+Format all loggers
+add test cases
+review delete use case ( right now making size to zero)
+review batch process and optimize if necessary
+Currently it supports base and subfolders monitoring
+Error handling - error tracking 
+
+
+
+Notes:
 1. identify the polling library,
 2. /config/config.json
     {
@@ -39,26 +57,6 @@
    updateStatus() err
 
    getSize()int
-
-
-
-
-
-ref:
-https://go.dev/blog/pipelines
-
-
-
-TODO: 
-
-Format all loggers
-add test cases
-review delete use case ( right now making size to zero)
-review batch process and optimize if necessary
-Currently it supports base and subfolders monitoring
-Error handling - error tracking 
-
-
 
 
 
