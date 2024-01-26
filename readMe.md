@@ -13,6 +13,13 @@
         
     }
 
+    {
+        {
+        "key:"filename,
+         size:int
+        }
+    }
+
     new file, update file
     determine the state - system time , updated ts vs created ts  maintain previous run time , 
     determine previously created value either overwrite or update 
@@ -40,7 +47,9 @@ Additional features to be implemented:
 
 
 
-PROBLEM STATEMENT:
+ref:
+https://go.dev/blog/pipelines
+
 
 
 

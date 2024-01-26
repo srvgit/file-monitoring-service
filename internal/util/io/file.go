@@ -22,3 +22,12 @@ func GetSubDirectories(path string) (subDirectories []string, err error) {
 	}
 	return subDirectories, nil
 }
+
+func GetFileSize(filePath string) (size int64, err error) {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+
+		return 0, err
+	}
+	return fileInfo.Size(), nil
+}
