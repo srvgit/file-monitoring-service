@@ -41,9 +41,6 @@
    getSize()int
 
 
-Additional features to be implemented:
-1. recursive 
-2. Error handling - error tracking 
 
 
 
@@ -59,6 +56,7 @@ add test cases
 review delete use case ( right now making size to zero)
 review batch process and optimize if necessary
 Currently it supports base and subfolders monitoring
+Error handling - error tracking 
 
 
 
