@@ -55,7 +55,7 @@ func (p *Processor) ListenFolderEvents() error {
 	paths, err := io.GetSubDirectories(p.config.SrcDirectory)
 	paths = append(paths, p.config.SrcDirectory)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return err
 	}
 	p.watch(paths)
@@ -130,7 +130,7 @@ func (p *Processor) processEvent(event fsnotify.Event, workers <-chan struct{}) 
 		log.Error(err)
 	}
 
-	fmt.Println("Size of the file: ", size)
+	log.Info("Size of the file: ", size)
 
 	writer <- FileEvent{FileName: event.Name, Size: size}
 
