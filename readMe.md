@@ -66,10 +66,10 @@ Notes:
 ref material/links :
 
 ref:
-_ttps://go.dev/blog/pipelines
-_ttps://stackoverflow.com/questions/52512915/how-to-solve-concurrency-access-of-golang-map
-_ttps://stackoverflow.com/questions/25306073/always-have-x-number-of-goroutines-running-at-any-time
-_ttps://www.pixelstech.net/article/1677371161-What-is-the-use-of-empty-struct-in-GoLang
+https://go.dev/blog/pipelines
+https://stackoverflow.com/questions/52512915/how-to-solve-concurrency-access-of-golang-map
+https://stackoverflow.com/questions/25306073/always-have-x-number-of-goroutines-running-at-any-time
+https://www.pixelstech.net/article/1677371161-What-is-the-use-of-empty-struct-in-GoLang
 
 
 
